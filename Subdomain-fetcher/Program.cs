@@ -17,96 +17,70 @@ namespace StringManipulation
         
         static void Main(string[] args)
         {
-            // string path = @"C:\Users\Common\Desktop\StringManipulation-master\domainLists.txt";
-            //var link = "https://stackoverflow.com";
-            //string prefix = "https://www";
-            //List<string> domains = DomainExtractor(path, prefix);
-            //CreateFileFromList(domains, "domainLists.txt");
-            //List<string> domains = LinkExtractor(path);
-            LinkExtractor();
-           
-           
-            //CreateFileFromList(domains, "subdomainLists.txt");
-        }
+            string path = @"C:\Users\Common\source\repos\Subdomain-fetcher\Subdomain-fetcher\domainLists.txt";
+            string[] lines = System.IO.File.ReadAllLines(@path);
 
-        
-
-        
-
-        public static void CreateFileFromString(string data, string path)
-        {
-            try
+            foreach (var line in lines)
             {
-                if (!System.IO.File.Exists(path))
+                try
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(@path, true))
-                    {
-                        file.Write(data);
-                    }
+                    LinkExtractor(line);
                 }
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Error occured:" + e);
-            }
-
-        }
-
-        
-
-        
-        private static void LinkExtractor()
-        {
-
-            
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = new HtmlDocument();
-            List<String> linkList = new List<String>();
-            doc = web.Load("http://stackoverflow.com");
-            foreach(HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
-            {
-                HtmlAttribute att = link.Attributes["href"];
-                String v;
-
-                // x.com
-
-
-                //if (v.Contains("stackexchange.com")==false)
-                //{
-                //    continue;
-                //}
-
-                if (att.Value.Contains("#"))
+                catch
                 {
-                    string[] substring = att.Value.Split('#');
-                    v = substring[0];
-                }
-                else
-                {
-                    v = att.Value;                
-
-                }
-                if(v!= "")
-                {
-                    if (v.StartsWith("http"))
-                    {
-                        linkList.Add(v);
-                    }
-                    
+                    continue;
                 }
                 
             }
-
-            List<string> subdomain = ExtractDomainNameFromURL(linkList);
             
-            foreach (var line in subdomain)
-            {
-                Console.WriteLine(line);
-            }
+        }     
+        
+        private static void LinkExtractor(string path)
+        {
+          
+                string maindomain = getmaindomain(path);
 
-            CreateFileFromList(subdomain, "subdomain.txt");
+                HtmlWeb web = new HtmlWeb();
+                HtmlDocument doc = new HtmlDocument();
+                List<String> linkList = new List<String>();
+
+                doc = web.Load(path);
+                
+                foreach (HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
+                {
+                    HtmlAttribute att = link.Attributes["href"];
+                    String v;
+
+                    if (att.Value.Contains("#"))
+                    {
+                        string[] substring = att.Value.Split('#');
+                        v = substring[0];
+                    }
+                    else
+                    {
+                        v = att.Value;
+
+                    }
+                    if (v != "")
+                    {
+                        if (v.StartsWith("http"))
+                        {
+                            linkList.Add(v);
+                        }
+
+                    }
+
+                }
+                List<string> subdomain = ExtractDomainNameFromURL(linkList, maindomain);
+
+                foreach (var line in subdomain)
+                {
+                    Console.WriteLine(line);
+                }
+
+                CreateFileFromList(subdomain, maindomain + ".txt");
+
             
-            Console.ReadKey();
         }
 
         public static void CreateFileFromList(List<string> data, string path)
@@ -127,20 +101,25 @@ namespace StringManipulation
             }
         }
 
-        public static List<string> ExtractDomainNameFromURL(List<string> Url)
+        public static string getmaindomain(string url)
         {
+            string maindomain = url.Replace("http://www.", "").Replace("https://www.", "");            
+            return maindomain;
+        }
+
+        public static List<string> ExtractDomainNameFromURL(List<string> Url,string hostdomain)
+        {
+
             List<string> shorturl = new List<string>();
             
-
             foreach(var line in Url)
             {
 
                 Uri uri = new Uri(line);
 
-                if(uri.Host.EndsWith(".stackexchange.com"))
+                if(uri.Host.EndsWith("."+hostdomain))
                 {
                     shorturl.Add(uri.Host);
-
                 }
                 
             }          
