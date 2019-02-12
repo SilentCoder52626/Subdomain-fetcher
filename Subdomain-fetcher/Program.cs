@@ -31,23 +31,7 @@ namespace StringManipulation
 
         
 
-        public static void CreateFileFromList(List<string> data, string path)
-        {
-            try
-            {
-                if (!System.IO.File.Exists(path))
-                {
-                    using (var file = new StreamWriter(@path))
-                    {
-                        data.ForEach(v => file.WriteLine(v));
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Error occured:" + e);
-            }
-        }
+        
 
         public static void CreateFileFromString(string data, string path)
         {
@@ -109,13 +93,32 @@ namespace StringManipulation
             {
                 Console.WriteLine(line);
             }
+            CreateFileFromList(linkList,"subdomain.txt");
 
             Console.ReadKey();
         }
 
+        public static void CreateFileFromList(List<string> data, string path)
+        {
+            try
+            {
+                if (!System.IO.File.Exists(path))
+                {
+                    using (var file = new StreamWriter(@path))
+                    {
+                        data.ForEach(v => file.WriteLine(v));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error occured:" + e);
+            }
+        }
+
         //public static string ExtractDomainNameFromURL(string Url)
         //{
-            
+
         //}
 
 
@@ -148,7 +151,7 @@ namespace StringManipulation
         //    }
         //}
 
-        
+
 
 
 
