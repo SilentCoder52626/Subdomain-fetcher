@@ -86,15 +86,26 @@ namespace StringManipulation
                     v = att.Value;                
 
                 }
-                linkList.Add(v);
+                if(v!= "")
+                {
+                    if (v.StartsWith("http"))
+                    {
+                        linkList.Add(v);
+                    }
+                    
+                }
+                
             }
+
+            List<string> subdomain = ExtractDomainNameFromURL(linkList);
             
-            foreach(var line in linkList)
+            foreach (var line in subdomain)
             {
                 Console.WriteLine(line);
             }
-            CreateFileFromList(linkList,"subdomain.txt");
 
+            CreateFileFromList(subdomain, "subdomain.txt");
+            
             Console.ReadKey();
         }
 
@@ -116,10 +127,25 @@ namespace StringManipulation
             }
         }
 
-        //public static string ExtractDomainNameFromURL(string Url)
-        //{
+        public static List<string> ExtractDomainNameFromURL(List<string> Url)
+        {
+            List<string> shorturl = new List<string>();
+            
 
-        //}
+            foreach(var line in Url)
+            {
+
+                Uri uri = new Uri(line);
+
+                if(uri.Host.EndsWith(".stackexchange.com"))
+                {
+                    shorturl.Add(uri.Host);
+
+                }
+                
+            }          
+            return shorturl;
+        }
 
 
 
