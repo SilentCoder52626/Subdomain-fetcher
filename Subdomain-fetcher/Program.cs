@@ -19,62 +19,67 @@ namespace StringManipulation
         {
             string path = @"C:\Users\Common\source\repos\Subdomain-fetcher\Subdomain-fetcher\domainLists.txt";
             string[] lines = System.IO.File.ReadAllLines(@path);
+            List<string> webload = Webload();
 
             foreach (var line in lines)
             {
                 try
                 {
-                    LinkExtractor(line);
+                    LinkExtractor(line,webload);
                 }
                 catch
                 {
                     continue;
                 }
                 
-            }            
+            }
         }     
-        
-        private static void LinkExtractor(string path)
+
+        private static List<string> Webload()
         {
-          
-                
+            HtmlWeb web = new HtmlWeb();
+            HtmlDocument doc = new HtmlDocument();
+            List<String> linkList = new List<String>();
 
-                HtmlWeb web = new HtmlWeb();
-                HtmlDocument doc = new HtmlDocument();
-                List<String> linkList = new List<String>();
 
-                
 
-                doc = web.Load("https://stackexchange.com/sites?view=list#name");
-                
-                foreach (HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
+            doc = web.Load("https://stackexchange.com/sites?view=list#name");
+
+            foreach (HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
+            {
+                HtmlAttribute att = link.Attributes["href"];
+                String v;
+
+                if (att.Value.Contains("#"))
                 {
-                    HtmlAttribute att = link.Attributes["href"];
-                    String v;
-
-                    if (att.Value.Contains("#"))
-                    {
-                        string[] substring = att.Value.Split('#');
-                        v = substring[0];
-                    }
-                    else
-                    {
-                        v = att.Value;
-
-                    }
-                    if (v != "")
-                    {
-                        if (v.StartsWith("http"))
-                        {
-                            linkList.Add(v);
-                        }
-                    }
+                    string[] substring = att.Value.Split('#');
+                    v = substring[0];
+                }
+                else
+                {
+                    v = att.Value;
 
                 }
+                if (v != "")
+                {
+                    if (v.StartsWith("http"))
+                    {
+                        linkList.Add(v);
+                    }
+                }
+
+            }
+            return linkList;
+        }
+        
+        private static void LinkExtractor(string path,List<string> webload)
+        {        
+                
+
+                
 
             string maindomain = getmaindomain(path);
-            Console.WriteLine("Serching For: " + maindomain);
-            List<string> subdomain = ExtractDomainNameFromURL(linkList, maindomain);
+            List<string> subdomain = ExtractDomainNameFromURL(webload, maindomain);
             List<string> distinct = subdomain.Distinct().ToList();
             CreateFileFromList(distinct, "subexchange.txt");
 
@@ -105,6 +110,7 @@ namespace StringManipulation
         public static List<string> ExtractDomainNameFromURL(List<string> Url,string hostdomain)
         {
 
+            Console.WriteLine("Serching For: " + hostdomain);
             List<string> shorturl = new List<string>();
             
             foreach(var line in Url)
