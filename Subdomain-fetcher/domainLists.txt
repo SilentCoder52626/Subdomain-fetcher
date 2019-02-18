@@ -1,5 +1,6 @@
-https://www.akamai.com
-https://www.akamaized.com
+https://www.stackexchange.com
+https://www.akamai.net
+https://www.akamaized.net
 https://www.akamaiedge.com
 https://www.akamaihd.com
 https://www.edgesuite.net
@@ -22,12 +23,12 @@ https://www.simplecdn.net
 https://www.instacontent.net
 https://www.footprint.net
 https://www.fpbns.net
-https://www.ay1.b.yahoo.com
+https://www.yahoo.com
 https://www.yimg.
 https://www.yahooapis.com
-https://www.google.
+https://www.google.com
 https://www.googlesyndication.
-https://www.youtube.
+https://www.youtube.com
 https://www.googleusercontent.com
 https://www.googlehosted.com
 https://www.gstatic.com
@@ -101,8 +102,8 @@ https://www.revcn.net
 https://www.revdn.net
 https://www.caspowa.com
 https://www.twimg.com
-https://www.facebook.com
 https://www.facebook.net
+https://www.facebook.com
 https://www.fbcdn.net
 https://www.cdninstagram.com
 https://www.rlcdn.com
@@ -135,3 +136,4 @@ https://www.cedexis.net
 https://www.streamprovider.net
 https://www.singularcdn.net.br
 https://www.myracloud.com
+

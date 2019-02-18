@@ -31,20 +31,21 @@ namespace StringManipulation
                     continue;
                 }
                 
-            }
-            
+            }            
         }     
         
         private static void LinkExtractor(string path)
         {
           
-                string maindomain = getmaindomain(path);
+                
 
                 HtmlWeb web = new HtmlWeb();
                 HtmlDocument doc = new HtmlDocument();
                 List<String> linkList = new List<String>();
 
-                doc = web.Load(path);
+                
+
+                doc = web.Load("https://stackexchange.com/sites?view=list#name");
                 
                 foreach (HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
                 {
@@ -67,20 +68,16 @@ namespace StringManipulation
                         {
                             linkList.Add(v);
                         }
-
                     }
 
                 }
-                List<string> subdomain = ExtractDomainNameFromURL(linkList, maindomain);
 
-                foreach (var line in subdomain)
-                {
-                    Console.WriteLine(line);
-                }
+            string maindomain = getmaindomain(path);
+            Console.WriteLine("Serching For: " + maindomain);
+            List<string> subdomain = ExtractDomainNameFromURL(linkList, maindomain);
+            List<string> distinct = subdomain.Distinct().ToList();
+            CreateFileFromList(distinct, "subexchange.txt");
 
-                CreateFileFromList(subdomain, maindomain + ".txt");
-
-            
         }
 
         public static void CreateFileFromList(List<string> data, string path)
@@ -89,7 +86,7 @@ namespace StringManipulation
             {
                 if (!System.IO.File.Exists(path))
                 {
-                    using (var file = new StreamWriter(@path))
+                    using (StreamWriter file = System.IO.File.AppendText(@path))
                     {
                         data.ForEach(v => file.WriteLine(v));
                     }
@@ -119,6 +116,7 @@ namespace StringManipulation
 
                 if(uri.Host.EndsWith("."+hostdomain))
                 {
+                    Console.WriteLine("Found: " + line);
                     shorturl.Add(uri.Host);
                 }
                 
