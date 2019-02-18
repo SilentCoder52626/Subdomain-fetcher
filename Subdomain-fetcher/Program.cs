@@ -84,13 +84,11 @@ namespace StringManipulation
         {
             try
             {
-                if (!System.IO.File.Exists(path))
-                {
+               
                     using (StreamWriter file = System.IO.File.AppendText(@path))
                     {
                         data.ForEach(v => file.WriteLine(v));
                     }
-                }
             }
             catch (Exception e)
             {
